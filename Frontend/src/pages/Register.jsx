@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const AdminLogin = () => {
+const Register = () => {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,7 +16,7 @@ const AdminLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Admin Login Logic Here");
+    alert("Register Logic Here");
   };
 
   return (
@@ -20,21 +24,30 @@ const AdminLogin = () => {
 
       {/* Blue Glow */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-blue-600/20 blur-[140px] rounded-full"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] h-[650px] bg-blue-600/20 blur-[150px] rounded-full"></div>
       </div>
 
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-10 w-[380px]">
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-10 w-[400px]">
 
         <h2 className="text-3xl font-bold text-center mb-6">
-          <span className="text-blue-500">Admin</span> Login
+          <span className="text-blue-500">Create</span> Account
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
           <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            onChange={handleChange}
+            required
+            className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
+          />
+
+          <input
             type="email"
             name="email"
-            placeholder="Admin Email"
+            placeholder="Email"
             onChange={handleChange}
             required
             className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
@@ -53,17 +66,17 @@ const AdminLogin = () => {
             type="submit"
             className="mt-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold shadow-lg shadow-blue-500/30 transition duration-300"
           >
-            Login
+            Register
           </button>
         </form>
 
         <p className="text-center text-gray-400 text-sm mt-6">
-          Back to{" "}
+          Already have an account?{" "}
           <span
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/login")}
             className="text-blue-400 cursor-pointer hover:underline"
           >
-            Home
+            Login
           </span>
         </p>
 
@@ -72,4 +85,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default Register;

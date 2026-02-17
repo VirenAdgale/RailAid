@@ -26,3 +26,64 @@ Specific adjustments for different text sizes
 .text-4xl { font-size: calc(2.25rem * var(--text-size-multiplier)); }
 .text-5xl { font-size: calc(3rem * var(--text-size-multiplier)); }
 .text-6xl { font-size: calc(3.75rem * var(--text-size-multiplier)); }
+
+
+.chatbot {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  width: 400px;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.chat-window {
+  height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+  margin-bottom: 10px;
+}
+
+.message {
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  max-width: 80%;
+}
+
+.message.user {
+  background-color: #0078ff;
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.message.bot {
+  background-color: #e0e0e0;
+  color: black;
+  align-self: flex-start;
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.chat-input button {
+  padding: 8px 16px;
+  background-color: #0078ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

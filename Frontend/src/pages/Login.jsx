@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const AdminLogin = () => {
+const Login = () => {
   const navigate = useNavigate();
-
   const [form, setForm] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
@@ -12,7 +11,7 @@ const AdminLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Admin Login Logic Here");
+    alert("User Login Logic Here");
   };
 
   return (
@@ -26,7 +25,7 @@ const AdminLogin = () => {
       <div className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-10 w-[380px]">
 
         <h2 className="text-3xl font-bold text-center mb-6">
-          <span className="text-blue-500">Admin</span> Login
+          <span className="text-blue-500">User</span> Login
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -34,7 +33,7 @@ const AdminLogin = () => {
           <input
             type="email"
             name="email"
-            placeholder="Admin Email"
+            placeholder="Email"
             onChange={handleChange}
             required
             className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
@@ -58,12 +57,12 @@ const AdminLogin = () => {
         </form>
 
         <p className="text-center text-gray-400 text-sm mt-6">
-          Back to{" "}
+          Don't have an account?{" "}
           <span
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/register")}
             className="text-blue-400 cursor-pointer hover:underline"
           >
-            Home
+            Register
           </span>
         </p>
 
@@ -72,4 +71,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default Login;
