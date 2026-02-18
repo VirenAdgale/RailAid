@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Shield, Zap, Heart, Users, UserCheck } from 'lucide-react';
 import StationAvailabilityCheck from '../components/StationAvailabilityCheck';
 import Footer from '../components/Footer';
@@ -7,6 +8,8 @@ import Navbar from '../components/Navbar';
 import StationCheck from './StationCheck';
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const [isPaused, setIsPaused] = useState(false);
   const [stationCheck, setStationCheck] = useState(true);
   const imageGallery = [
@@ -54,10 +57,22 @@ const Home = () => {
         </div>
         
         <div className="mt-8 flex gap-4 flex-wrap justify-center">
-          <button className="px-6 py-3 border border-blue-500 text-blue-400 rounded-lg hover:bg-blue-600/10 transition-all duration-200 font-medium">
-            Explore Services
-          </button>
-        </div>
+
+  <button
+    onClick={() => navigate("/login")}
+    className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 font-medium shadow-md"
+  >
+    Login
+  </button>
+
+  <button
+    className="px-6 py-3 border border-blue-500 text-blue-400 rounded-lg hover:bg-blue-600/10 transition-all duration-200 font-medium"
+  >
+    Explore Services
+  </button>
+
+</div>
+
       </section>
 
 

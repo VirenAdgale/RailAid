@@ -5,7 +5,7 @@ import { useTextSize } from "../context/TextSizeContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { textSize, increaseTextSize, decreaseTextSize, resetTextSize, textSizePercentage } = useTextSize();
+  const { textSize, increaseTextSize, decreaseTextSize, resetTextSize } = useTextSize();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 

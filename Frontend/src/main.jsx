@@ -5,12 +5,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import Layout from './Layout.jsx'
 import Home from './pages/Home.jsx'
-import BookingService from './pages/BookingService.jsx'
 import About from './pages/About.jsx'
 import Services from './pages/Services.jsx'
 import Support from './pages/Support.jsx'
+import Booking from './pages/Booking.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import StaffLogin from './pages/StaffLogin.jsx'
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx'
 import { TextSizeProvider } from './context/TextSizeContext.jsx'
 const router = createBrowserRouter([
   {
@@ -21,10 +23,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <Home/>
       },
-      {
-        path: '/booking',
-        element: <BookingService/>
-      },
+      
       {
         path: '/admin-login',
         element: <AdminLogin/>
@@ -45,7 +44,21 @@ const router = createBrowserRouter([
       {
         path: '/support',
         element: <Support/>
-      }
+      },
+      {
+        path: '/login',
+        element: <Login/>
+      },
+      {
+        path: '/register',
+        element: <Register/>
+      },
+      {
+        path:"/booking",
+        element: <Booking/>
+       }
+      
+
     ]
   }
 ])

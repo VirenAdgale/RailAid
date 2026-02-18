@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const TextSizeContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTextSize = () => {
   const context = useContext(TextSizeContext);
   if (!context) {
