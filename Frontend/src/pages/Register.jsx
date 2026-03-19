@@ -16,7 +16,15 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Register Logic Here");
+
+    // ✅ Show registration success
+    const { name, email, password } = form;
+    if (name && email && password) {
+      alert("Registration Successful ✅");
+      navigate("/login"); // redirect after successful registration
+    } else {
+      alert("Registration Failed ❌");
+    }
   };
 
   return (
@@ -34,7 +42,6 @@ const Register = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
           <input
             type="text"
             name="name"

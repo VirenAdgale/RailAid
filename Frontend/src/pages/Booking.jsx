@@ -17,9 +17,41 @@ const Booking = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Booking Submitted ✅");
+
+    try {
+      const response = await fetch("http://localhost:5000/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      });
+
+      const data = await response.json();
+      console.log("Server Response:", data);
+
+      if (response.ok) {
+        alert("Booking Submitted Successfully ✅");
+
+        // Reset form
+        setForm({
+          passengerName: "",
+          source: "",
+          destination: "",
+          journeyDate: "",
+          seats: 1,
+          serviceType: "Wheelchair"
+        });
+      } else {
+        alert("Booking Failed ❌");
+      }
+
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Server Error ❌");
+    }
   };
 
   return (
@@ -43,6 +75,7 @@ const Booking = () => {
             type="text"
             name="passengerName"
             placeholder="Passenger Name"
+            value={form.passengerName}
             onChange={handleChange}
             required
             className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
@@ -50,6 +83,7 @@ const Booking = () => {
 
           <select
             name="serviceType"
+            value={form.serviceType}
             onChange={handleChange}
             className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
           >
@@ -62,6 +96,7 @@ const Booking = () => {
             type="text"
             name="source"
             placeholder="Source Station"
+            value={form.source}
             onChange={handleChange}
             required
             className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
@@ -71,6 +106,7 @@ const Booking = () => {
             type="text"
             name="destination"
             placeholder="Destination Station"
+            value={form.destination}
             onChange={handleChange}
             required
             className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
@@ -79,6 +115,7 @@ const Booking = () => {
           <input
             type="date"
             name="journeyDate"
+            value={form.journeyDate}
             onChange={handleChange}
             required
             className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
@@ -89,6 +126,7 @@ const Booking = () => {
             name="seats"
             min="1"
             placeholder="Number of Seats"
+            value={form.seats}
             onChange={handleChange}
             required
             className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
