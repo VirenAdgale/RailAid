@@ -166,8 +166,8 @@ dmypy.json
 
 # ML specific
 models/
-*.pkl
-*.joblib
+#*.pkl
+#*.joblib
 *.h5
 *.hdf5
 *.ckpt
