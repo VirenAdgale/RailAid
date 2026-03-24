@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+const socket = io("hhttp://192.168.29.145:5000");
 
 const Driver = () => {
   const [bookings, setBookings] = useState([]);
