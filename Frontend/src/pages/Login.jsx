@@ -11,7 +11,15 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("User Login Logic Here");
+
+    // ✅ Show login success
+    const { email, password } = form;
+    if (email && password) {
+      alert("Login Successful ✅");
+      navigate("/"); // redirect after login
+    } else {
+      alert("Login Failed ❌");
+    }
   };
 
   return (
@@ -29,7 +37,6 @@ const Login = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
           <input
             type="email"
             name="email"

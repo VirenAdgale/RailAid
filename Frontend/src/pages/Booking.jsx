@@ -1,116 +1,116 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./Booking.css";
 
 const Booking = () => {
-  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     passengerName: "",
     source: "",
     destination: "",
     journeyDate: "",
-    seats: 1,
-    serviceType: "Wheelchair"
+    seats: "",
+    passenger_type: "",
+    luggage_weight: "",
+    number_of_bags: "",
+    platform_change: 0,
+    urgency_level: 0
   });
 
+  const [result, setResult] = useState(null);
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+
+    setForm({
+      ...form,
+      [name]: type === "checkbox" ? (checked ? 1 : 0) : value
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Booking Submitted ✅");
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post(
+        "http://10.169.75.44:5000/api/bookings",
+        {
+          ...form,
+          seats: Number(form.seats),
+          luggage_weight: Number(form.luggage_weight),
+          number_of_bags: Number(form.number_of_bags)
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setResult(res.data.booking);
+
+    } catch (error) {
+      console.error(error);
+      alert("Booking failed!");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-black via-slate-900 to-blue-950 text-white overflow-hidden">
+    <div className="booking-container">
+      <div className="booking-card">
 
-      {/* Blue Glow */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-blue-600/20 blur-[150px] rounded-full"></div>
-      </div>
+        <h2 className="title">Ferry Booking</h2>
 
-      {/* Booking Card */}
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-10 w-[450px]">
+        <form onSubmit={handleSubmit}>
 
-        <h2 className="text-3xl font-bold text-center mb-6">
-          <span className="text-blue-500">Book</span> Assistance
-        </h2>
+          <div className="grid">
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <input className="input" type="text" name="passengerName" placeholder="Passenger Name" onChange={handleChange} required />
+            <input className="input" type="text" name="source" placeholder="Source" onChange={handleChange} required />
 
-          <input
-            type="text"
-            name="passengerName"
-            placeholder="Passenger Name"
-            onChange={handleChange}
-            required
-            className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
-          />
+            <input className="input" type="text" name="destination" placeholder="Destination" onChange={handleChange} required />
+            <input className="input" type="date" name="journeyDate" onChange={handleChange} required />
 
-          <select
-            name="serviceType"
-            onChange={handleChange}
-            className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
-          >
-            <option value="Wheelchair">Wheelchair Assistance</option>
-            <option value="Luggage">Luggage Support</option>
-            <option value="SeniorCare">Senior Citizen Help</option>
-          </select>
+            <input className="input" type="number" name="seats" placeholder="Seats" onChange={handleChange} required />
 
-          <input
-            type="text"
-            name="source"
-            placeholder="Source Station"
-            onChange={handleChange}
-            required
-            className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
-          />
+            <select className="input" name="passenger_type" onChange={handleChange} required>
+              <option value="">Passenger Type</option>
+              <option value="adult">Adult</option>
+              <option value="senior">Senior</option>
+              <option value="differently_abled">Differently Abled</option>
+            </select>
 
-          <input
-            type="text"
-            name="destination"
-            placeholder="Destination Station"
-            onChange={handleChange}
-            required
-            className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
-          />
+            <input className="input" type="number" name="luggage_weight" placeholder="Luggage Weight (kg)" onChange={handleChange} required />
+            <input className="input" type="number" name="number_of_bags" placeholder="Number of Bags" onChange={handleChange} required />
 
-          <input
-            type="date"
-            name="journeyDate"
-            onChange={handleChange}
-            required
-            className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
-          />
+          </div>
 
-          <input
-            type="number"
-            name="seats"
-            min="1"
-            placeholder="Number of Seats"
-            onChange={handleChange}
-            required
-            className="px-4 py-3 rounded-lg bg-slate-800/60 border border-slate-700 focus:border-blue-500 focus:outline-none"
-          />
+          <div className="checkbox-group">
+            <label>
+              <input type="checkbox" name="platform_change" onChange={handleChange} />
+              Platform Change
+            </label>
 
-          <button
-            type="submit"
-            className="mt-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold shadow-lg shadow-blue-500/30 transition duration-300"
-          >
-            Confirm Booking
-          </button>
+            <label>
+              <input type="checkbox" name="urgency_level" onChange={handleChange} />
+              Urgent Travel
+            </label>
+          </div>
+
+          <button className="btn" type="submit">Book Ferry</button>
+
         </form>
 
-        <p className="text-center text-gray-400 text-sm mt-6">
-          Back to{" "}
-          <span
-            onClick={() => navigate("/")}
-            className="text-blue-400 cursor-pointer hover:underline"
-          >
-            Home
-          </span>
-        </p>
+        {result && (
+          <div className="result-card">
+            <h3>Booking Confirmed 🎉</h3>
+            <p><strong>Service:</strong> {result.serviceType}</p>
+            <p><strong>Driver:</strong> {result.assignedDriver || "N/A"}</p>
+            <p><strong>Wait Time:</strong> {result.estimatedWaitTime}</p>
+          </div>
+        )}
 
       </div>
     </div>
