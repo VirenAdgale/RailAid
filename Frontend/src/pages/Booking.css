@@ -1,0 +1,358 @@
+.booking-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(14, 165, 233, 0.16), transparent 32rem),
+    linear-gradient(135deg, #020617 0%, #111827 48%, #0f172a 100%);
+  color: #f8fafc;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.booking-shell {
+  margin: 0 auto;
+  max-width: 1180px;
+  padding: 56px 20px 72px;
+}
+
+.booking-hero {
+  margin-bottom: 28px;
+  max-width: 860px;
+}
+
+.booking-eyebrow {
+  display: inline-flex;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.12);
+  padding: 8px 14px;
+  color: #bfdbfe;
+  font-size: 0.86rem;
+}
+
+.booking-hero h1 {
+  margin: 18px 0 12px;
+  max-width: 780px;
+  font-size: clamp(2.1rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.04;
+}
+
+.booking-hero p {
+  max-width: 680px;
+  color: #cbd5e1;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.booking-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.booking-trust span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  padding: 9px 12px;
+  color: #dbeafe;
+  font-size: 0.9rem;
+}
+
+.booking-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 22px;
+  align-items: start;
+}
+
+.booking-panel,
+.payment-panel,
+.result-card {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.86);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+}
+
+.booking-panel,
+.payment-panel {
+  padding: 24px;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+  color: #93c5fd;
+}
+
+.panel-heading h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.panel-heading p {
+  margin: 4px 0 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.booking-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 8px;
+  background: rgba(2, 6, 23, 0.72);
+  color: #f8fafc;
+  outline: none;
+  padding: 12px 13px;
+}
+
+.input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+.input::placeholder {
+  color: #94a3b8;
+}
+
+.service-toggles {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.arrival-mode {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.arrival-mode button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 8px;
+  background: rgba(2, 6, 23, 0.5);
+  color: #dbeafe;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.arrival-mode button.selected,
+.arrival-mode button:hover {
+  border-color: rgba(96, 165, 250, 0.75);
+  background: rgba(37, 99, 235, 0.18);
+}
+
+.service-toggles label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.52);
+  padding: 12px;
+  color: #dbeafe;
+}
+
+.service-toggles input {
+  height: 18px;
+  width: 18px;
+}
+
+.fare-card {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(59, 130, 246, 0.24);
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.58);
+  padding: 16px;
+}
+
+.fare-card div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #cbd5e1;
+}
+
+.fare-card strong {
+  color: #f8fafc;
+}
+
+.fare-card .total-row {
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  margin-top: 4px;
+  padding-top: 14px;
+  color: #f8fafc;
+}
+
+.fare-card .total-row strong {
+  color: #86efac;
+  font-size: 1.35rem;
+}
+
+.payment-options {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 8px;
+  background: rgba(2, 6, 23, 0.5);
+  color: #e2e8f0;
+  cursor: pointer;
+  padding: 12px;
+  text-align: left;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.payment-option:hover,
+.payment-option.selected {
+  border-color: rgba(96, 165, 250, 0.75);
+  background: rgba(37, 99, 235, 0.18);
+}
+
+.payment-option.selected {
+  transform: translateY(-1px);
+}
+
+.payment-option span {
+  display: grid;
+  gap: 2px;
+}
+
+.payment-option small {
+  color: #94a3b8;
+}
+
+.payment-inputs {
+  display: grid;
+  gap: 12px;
+}
+
+.btn {
+  width: 100%;
+  margin-top: 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #2563eb, #0891b2);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 13px 16px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+.result-card {
+  margin-top: 22px;
+  padding: 20px;
+}
+
+.result-card > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.result-card h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.result-card p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0;
+  color: #dbeafe;
+}
+
+.tracking-steps {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.tracking-steps span {
+  border-left: 3px solid rgba(148, 163, 184, 0.35);
+  padding: 8px 10px;
+  color: #cbd5e1;
+}
+
+.tracking-steps span.done {
+  border-color: #22c55e;
+  color: #bbf7d0;
+}
+
+.tracking-steps span.active {
+  border-color: #38bdf8;
+  color: #bae6fd;
+}
+
+@media (max-width: 900px) {
+  .booking-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .booking-shell {
+    padding: 36px 14px 54px;
+  }
+
+  .booking-panel,
+  .payment-panel {
+    padding: 18px;
+  }
+
+  .booking-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .arrival-mode {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-hero h1 {
+    font-size: 2.15rem;
+  }
+}

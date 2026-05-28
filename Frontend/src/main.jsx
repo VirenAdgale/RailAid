@@ -11,9 +11,12 @@ import Support from './pages/Support.jsx'
 import Booking from './pages/Booking.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import StaffLogin from './pages/StaffLogin.jsx'
+import StaffDashboard from './pages/StaffDashboard.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import { TextSizeProvider } from './context/TextSizeContext.jsx'
+import { AccessibilityProvider } from './context/AccessibilityContext.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -56,6 +59,15 @@ const router = createBrowserRouter([
       {
         path:"/booking",
         element: <Booking/>
+      },
+      {
+        element: <ProtectedRoute allowedRoles={["staff"]} />,
+        children: [
+          {
+            path: "/staff-dashboard",
+            element: <StaffDashboard />
+          }
+        ]
        }
       
 
@@ -65,8 +77,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <TextSizeProvider>
-      <RouterProvider router={router}/>
-    </TextSizeProvider>
+    <AccessibilityProvider>
+      <TextSizeProvider>
+        <RouterProvider router={router}/>
+      </TextSizeProvider>
+    </AccessibilityProvider>
   </StrictMode>,
 )
