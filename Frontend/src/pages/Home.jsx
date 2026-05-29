@@ -1,23 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart, Shield, UserCheck, Users, Zap } from "lucide-react";
 import StationAvailabilityCheck from "../components/StationAvailabilityCheck";
-import bookingMotion from "../assets/booking-motion.svg";
-import serviceNetwork from "../assets/service-network.svg";
-import supportPulse from "../assets/support-pulse.svg";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [isPaused, setIsPaused] = useState(false);
-
-  const imageGallery = [
-    { src: bookingMotion, title: "Assistance booking" },
-    { src: serviceNetwork, title: "Service routing" },
-    { src: supportPulse, title: "Live support" },
-    { src: bookingMotion, title: "Accessible flow" },
-    { src: serviceNetwork, title: "Station coordination" },
-    { src: supportPulse, title: "Passenger help" }
-  ];
 
   const reviews = [
     {
@@ -40,10 +27,12 @@ const Home = () => {
         <h1 className="mb-4 text-4xl font-bold sm:text-5xl">
           Welcome to <span className="text-blue-400">RailAid</span>
         </h1>
+
         <p className="max-w-2xl text-lg leading-relaxed text-gray-300">
           Your station partner for luggage support, assisted mobility, and
           faster on-ground help without the usual confusion.
         </p>
+
         <div className="pt-7">
           <StationAvailabilityCheck />
         </div>
@@ -69,6 +58,7 @@ const Home = () => {
         <h2 className="mb-10 text-center text-3xl font-bold text-blue-400">
           Why Choose RailAid?
         </h2>
+
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
@@ -113,50 +103,26 @@ const Home = () => {
               className="rounded-xl border border-slate-700 bg-slate-800/60 p-6 shadow-lg transition-all duration-300 hover:bg-slate-800/80"
             >
               <div className="mb-3 flex items-center gap-3">
-                <div className={`rounded-lg p-2 ${card.accent}`}>{card.icon}</div>
-                <h3 className="text-xl font-semibold text-white">{card.title}</h3>
+                <div className={`rounded-lg p-2 ${card.accent}`}>
+                  {card.icon}
+                </div>
+
+                <h3 className="text-xl font-semibold text-white">
+                  {card.title}
+                </h3>
               </div>
+
               <p className="text-sm text-gray-300">{card.body}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="max-w-full overflow-hidden px-6 py-12">
-        <h2 className="mb-8 text-center text-2xl font-bold text-blue-400">
-          Our Services in Action
-        </h2>
-
-        <div
-          className="relative"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={() => setIsPaused(true)}
-          onTouchEnd={() => setIsPaused(false)}
-        >
-          <div className={`flex gap-4 ${isPaused ? "" : "animate-slide"}`}>
-            {[...imageGallery, ...imageGallery, ...imageGallery].map((item, idx) => (
-              <div
-                key={`${item.title}-${idx}`}
-                className="h-48 w-48 flex-shrink-0 overflow-hidden rounded-lg border border-slate-700 bg-slate-800 shadow-lg"
-              >
-                <img
-                  src={item.src}
-                  alt={item.title}
-                  className="h-full w-full object-cover p-3"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <p className="mt-4 text-center text-sm text-gray-400">Touch or hover to pause</p>
-      </section>
-
       <section className="mx-auto max-w-5xl px-6 py-16">
         <h2 className="mb-6 text-center text-3xl font-bold text-blue-400">
           What We Provide
         </h2>
+
         <p className="mx-auto mb-10 max-w-3xl text-center leading-relaxed text-gray-300">
           RailAid is designed to reduce friction inside busy stations. Whether you
           need luggage handling, wheelchair assistance, or help reaching the right
@@ -184,33 +150,24 @@ const Home = () => {
         <h2 className="mb-8 text-center text-3xl font-bold text-blue-400">
           What Our Passengers Say
         </h2>
+
         <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 md:grid-cols-3">
           {reviews.map((review) => (
             <div
               key={review.name}
               className="rounded-lg border border-slate-700 bg-slate-900/70 p-6 shadow-md transition-all duration-200 hover:bg-slate-800/80"
             >
-              <p className="mb-3 italic text-gray-300">"{review.text}"</p>
-              <p className="text-sm font-semibold text-blue-400">- {review.name}</p>
+              <p className="mb-3 italic text-gray-300">
+                "{review.text}"
+              </p>
+
+              <p className="text-sm font-semibold text-blue-400">
+                - {review.name}
+              </p>
             </div>
           ))}
         </div>
       </section>
-
-      <style>{`
-        @keyframes slide {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(calc(-192px * 6 - 16px * 6));
-          }
-        }
-
-        .animate-slide {
-          animation: slide 25s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };
