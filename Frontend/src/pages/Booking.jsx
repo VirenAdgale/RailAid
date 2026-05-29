@@ -136,7 +136,11 @@ const Booking = () => {
         }
       );
 
-      setResult(res.data.booking);
+      
+setTimeout(() => {
+  setResult(res.data.booking);
+}, 3000);
+
     } catch (error) {
       const message =
         error.response?.status === 401
