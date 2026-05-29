@@ -1,16 +1,25 @@
-from flask import Flask, request, jsonify # Flask web framework
-from flask_cors import CORS # handle Cross-Origin Resource Sharing
+import os
+
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+
 from chatbot_logic import chatbot_response
 
-app = Flask(__name__) # create Flask app
-CORS(app)  # allows React frontend to talk to Flask backend
+app = Flask(__name__)
+CORS(app)
 
-@app.route("/chat", methods=["POST"]) # define /chat endpoint
+
+@app.get("/health")
+def health():
+    return jsonify({"status": "ok", "service": "railaid_chatbot"})
+
+
+@app.post("/chat")
 def chat():
-    data = request.get_json() # get JSON data from request
-    user_message = data.get("message", "") # extract user message
-    bot_reply = chatbot_response(user_message) # get bot reply
-    return jsonify({"reply": bot_reply}) # return bot reply as JSON
+    data = request.get_json(silent=True) or {}
+    user_message = data.get("message", "")
+    return jsonify({"reply": chatbot_response(user_message)})
+
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True) # run app on localhost:5000
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5002)))

@@ -205,3 +205,8 @@ Thumbs.db
 *.key
 *.crt
 *.csr
+ML/.deps/
+venv/
+node_modules/
+__pycache__/
+.env

@@ -2,37 +2,49 @@ const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// ADMIN REGISTER (only for first time setup)
+const buildSafeAdmin = (admin) => ({
+  id: admin._id,
+  name: admin.name,
+  email: admin.email
+});
+
 exports.registerAdmin = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    const normalizedEmail = email.trim().toLowerCase();
 
-    const existingAdmin = await Admin.findOne({ email });
+    const existingAdmin = await Admin.findOne({ email: normalizedEmail });
     if (existingAdmin) {
-      return res.status(400).json({ message: "Admin already exists" });
+      return res.status(409).json({ message: "Admin already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const admin = await Admin.create({
       name,
-      email,
+      email: normalizedEmail,
       password: hashedPassword
     });
 
-    res.status(201).json({ message: "Admin Registered Successfully" });
-
+    return res.status(201).json({
+      message: "Admin registered successfully.",
+      admin: buildSafeAdmin(admin)
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error.code === 11000) {
+      return res.status(409).json({ message: "Admin already exists" });
+    }
+
+    return res.status(500).json({ error: error.message });
   }
 };
 
-// ADMIN LOGIN
 exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = email.trim().toLowerCase();
 
-    const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ email: normalizedEmail });
     if (!admin) {
       return res.status(400).json({ message: "Admin not found" });
     }
@@ -48,9 +60,11 @@ exports.loginAdmin = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token, admin });
-
+    return res.json({
+      token,
+      admin: buildSafeAdmin(admin)
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };

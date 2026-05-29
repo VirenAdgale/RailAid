@@ -1,137 +1,227 @@
-import random # for random responses
-import datetime # to get current time
+import datetime
+import random
 
-def chatbot_response(user_input):   
-    user_input = user_input.lower().strip() # normalize input
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import Pipeline
+except ModuleNotFoundError:
+    TfidfVectorizer = None
+    LogisticRegression = None
+    Pipeline = None
 
-    greetings = ["hi", "hello", "hey", "good morning", "good evening"] 
-    farewells = ["bye", "goodbye", "see you", "take care"]
 
-    # Common keywords
-    help_words = ["help", "support", "problem", "issue", "train", "booking", "ticket"]
-    cancellation_words = ["cancel", "cancellation", "refund"]
-    delay_words = ["delay", "late", "timing", "schedule"]
-    facilities_words = ["wheelchair", "assistance", "disabled", "support staff", "help desk"]
-    payment_words = ["payment", "upi", "card", "failed", "transaction"]
-    complaint_words = ["complaint", "feedback", "suggestion"]
-    contact_words = ["contact", "email", "phone", "number"]
-    id_words = ["id", "pnr", "ticket number"]
-    route_words = ["route", "destination", "station", "train number"]
-    login_words = ["login", "staff login", "admin login", "account"]
+INTENT_EXAMPLES = {
+    "greeting": [
+        "hi",
+        "hello",
+        "hey",
+        "good morning",
+        "is anyone there",
+        "can you help me",
+    ],
+    "farewell": [
+        "bye",
+        "goodbye",
+        "see you later",
+        "thanks bye",
+        "take care",
+    ],
+    "booking": [
+        "how do I book assistance",
+        "book wheelchair support",
+        "book luggage ferry",
+        "reserve station help",
+        "create a booking",
+        "need help for my journey",
+    ],
+    "wheelchair": [
+        "wheelchair help",
+        "disabled passenger assistance",
+        "differently abled support",
+        "elderly passenger needs escort",
+        "senior citizen assistance",
+        "mobility support at station",
+    ],
+    "payment": [
+        "payment failed",
+        "can I pay by upi",
+        "card payment",
+        "pay at station",
+        "transaction problem",
+        "payment method",
+    ],
+    "refund": [
+        "cancel my booking",
+        "refund status",
+        "cancellation request",
+        "money back",
+        "cancel assistance",
+    ],
+    "delay": [
+        "train delayed",
+        "arrival time changed",
+        "late train",
+        "schedule issue",
+        "ferry delay",
+    ],
+    "route": [
+        "route to platform",
+        "where should driver come",
+        "pickup point",
+        "drop point",
+        "station route",
+        "destination station",
+    ],
+    "contact": [
+        "contact support",
+        "phone number",
+        "email address",
+        "help desk contact",
+        "call railaid",
+    ],
+    "complaint": [
+        "complaint",
+        "feedback",
+        "bad service",
+        "staff did not arrive",
+        "suggestion",
+    ],
+    "login": [
+        "login issue",
+        "staff login",
+        "admin login",
+        "cannot access account",
+        "register account",
+    ],
+    "id_lookup": [
+        "booking id",
+        "pnr",
+        "ticket number",
+        "find my booking",
+        "where is my request",
+    ],
+}
 
-    # Time-based greeting
-    current_hour = datetime.datetime.now().hour # get current hour
+RESPONSES = {
+    "greeting": [
+        "Hello. How can RailAid help you today?",
+        "Hi there. Do you need help with booking or station support?",
+        "Welcome back. What can I help you with?",
+    ],
+    "farewell": [
+        "Goodbye. Have a safe and comfortable journey.",
+        "See you soon. Safe travels.",
+        "Take care, and reach out again if you need station support.",
+    ],
+    "booking": [
+        "Use Book Assistance, enter journey details, pickup and drop points, passenger type, luggage, and payment option.",
+        "For a new request, open Book Assistance and confirm the booking after reviewing the fare.",
+        "For special assistance, select senior citizen or differently abled in the booking form.",
+    ],
+    "wheelchair": [
+        "RailAid supports wheelchair assistance, boarding help, luggage ferry, and station guidance at listed stations.",
+        "Choose senior citizen or differently abled in the booking form so the request receives priority handling.",
+        "Wheelchair and escort support can be requested from Book Assistance.",
+    ],
+    "payment": [
+        "RailAid supports UPI, card, and pay-at-station options in the booking flow.",
+        "If payment fails, wait a few minutes and contact support with your transaction details.",
+        "Pay-at-station confirms the request first and collects payment on arrival.",
+    ],
+    "refund": [
+        "Cancellation and refund requests are handled by support. Keep your booking ID ready.",
+        "Refund review starts after cancellation details are shared with support.",
+        "Please share your booking ID or PNR with support for cancellation help.",
+    ],
+    "delay": [
+        "If your train or ferry is delayed, update support so the assistance slot can be adjusted.",
+        "For official train delays, check live rail status and keep your booking ID ready.",
+        "RailAid staff can adjust assistance timing when delay details are shared.",
+    ],
+    "route": [
+        "Please provide your pickup and drop point. RailAid assigns an optimized station route after booking.",
+        "The booking confirmation shows driver ETA, vehicle, and optimized route summary.",
+        "Station availability can be checked before booking, then route guidance appears after assignment.",
+    ],
+    "contact": [
+        "You can email support@railaid.com for help.",
+        "Call +91 123 456 7890 for RailAid support.",
+        "You can also use this chat for booking, service, and payment questions.",
+    ],
+    "complaint": [
+        "I am sorry for the inconvenience. Please share what happened and include your booking ID if you have one.",
+        "You can send feedback to support@railaid.com with booking or transaction details.",
+        "Please describe the issue so the support team can review it properly.",
+    ],
+    "login": [
+        "Passenger login is available from the menu. Staff and admin access have separate login pages.",
+        "Use Staff Login only for RailAid operations accounts.",
+        "Admins can sign in from Admin Login. Passenger users should use Login or Register.",
+    ],
+    "id_lookup": [
+        "Please keep your PNR or booking ID ready when contacting support.",
+        "Booking lookup inside chat is not enabled yet, but support can help if you share the ID.",
+        "Use your ticket number, PNR, or registered email when asking support about a booking.",
+    ],
+    "fallback": [
+        "I did not fully understand that. Try asking about booking, payment, refund, wheelchair support, route, or station availability.",
+        "Could you rephrase that with a little more detail?",
+        "I can help best with RailAid services, booking, payment, refund, route, or station assistance questions.",
+    ],
+}
+
+
+def build_classifier():
+    if Pipeline is None:
+        return None
+
+    texts = []
+    labels = []
+
+    for intent, examples in INTENT_EXAMPLES.items():
+        texts.extend(examples)
+        labels.extend([intent] * len(examples))
+
+    classifier = Pipeline([
+        ("tfidf", TfidfVectorizer(ngram_range=(1, 2), min_df=1)),
+        ("model", LogisticRegression(max_iter=500)),
+    ])
+    classifier.fit(texts, labels)
+    return classifier
+
+
+CLASSIFIER = build_classifier()
+
+
+def classify_intent(user_input):
+    if CLASSIFIER is None:
+        scores = {}
+        words = set(user_input.split())
+
+        for intent, examples in INTENT_EXAMPLES.items():
+            scores[intent] = sum(
+                len(words.intersection(example.split())) for example in examples
+            )
+
+        best_intent = max(scores, key=scores.get)
+        return best_intent if scores[best_intent] > 0 else "fallback"
+
+    probabilities = CLASSIFIER.predict_proba([user_input])[0]
+    best_index = probabilities.argmax()
+    confidence = probabilities[best_index]
+    intent = CLASSIFIER.classes_[best_index]
+    return intent if confidence >= 0.18 else "fallback"
+
+
+def chatbot_response(user_input):
+    user_input = str(user_input or "").lower().strip()
+
+    if not user_input:
+        return "Tell me what you need help with: booking, wheelchair support, payment, refund, route, or station assistance."
+
     if "time" in user_input:
         return f"The current time is {datetime.datetime.now().strftime('%I:%M %p')}."
 
-    # GREETINGS
-    if any(word in user_input for word in greetings):
-        return random.choice([
-            "Hello! 👋 How can I assist you today?",
-            "Hi there! Need help with something?",
-            "Hey! What can I do for you?",
-            "Good to see you again! How can RailAid support you today?"
-        ])
-    
-    # FAREWELLS
-    elif any(word in user_input for word in farewells):
-        return random.choice([
-            "Goodbye! Have a safe and pleasant journey! 🚆",
-            "See you soon! Safe travels!",
-            "Take care and travel safe with RailAid!"
-        ])
-    
-    # HELP REQUEST
-    elif any(word in user_input for word in help_words):
-        return random.choice([
-            "I can help with booking, cancellations, refunds, or support requests.",
-            "Please describe your problem — for example: ‘I want to cancel my booking’ or ‘train delay info’.",
-            "Sure! Tell me if your issue is with ticket booking, payment, or something else."
-        ])
-
-    # BOOKING
-    elif "book" in user_input or "booking" in user_input:
-        return random.choice([
-            "You can book assistance through the 'Book Assistance' page in the menu.",
-            "To book special assistance, go to the Booking section and fill in your travel details.",
-            "Sure! Click on 'Book Assistance' from the navbar to proceed with your booking."
-        ])
-    
-    # CANCELLATION / REFUND
-    elif any(word in user_input for word in cancellation_words):
-        return random.choice([
-            "You can cancel your assistance booking through your account dashboard.",
-            "Refunds are processed within 3–5 business days after cancellation.",
-            "Need to cancel? Please provide your booking ID or PNR to proceed."
-        ])
-    
-    # TRAIN DELAYS OR STATUS
-    elif any(word in user_input for word in delay_words):
-        return random.choice([
-            "Train delays can be checked on the official Indian Railways website or RailAid's live status section.",
-            "If your train is delayed, RailAid will automatically update your assistance timing.",
-            "You can check train timing updates using your PNR or train number."
-        ])
-    
-    # FACILITIES / ACCESSIBILITY
-    elif any(word in user_input for word in facilities_words):
-        return random.choice([
-            "We provide wheelchair assistance, boarding support, and help desk guidance at major stations.",
-            "Yes, RailAid supports disabled passengers with on-ground staff help.",
-            "Please specify your assistance type — wheelchair, boarding, or escort support?"
-        ])
-    
-    # PAYMENT ISSUES
-    elif any(word in user_input for word in payment_words):
-        return random.choice([
-            "If your payment failed, please wait 10–15 minutes. It usually auto-reflects.",
-            "You can raise a refund request through the 'Support' section with your transaction ID.",
-            "RailAid supports UPI, credit/debit cards, and net banking for payments."
-        ])
-
-    # LOGIN / ACCOUNT
-    elif any(word in user_input for word in login_words):
-        return random.choice([
-            "For staff login, go to the 'Staff Login' page in the menu.",
-            "Admins can log in using the 'Admin Login' page.",
-            "If you forgot your password, click on 'Forgot Password' on the login page."
-        ])
-    
-    # CONTACT / COMPLAINTS
-    elif any(word in user_input for word in contact_words):
-        return random.choice([
-            "You can contact our support team at support@railaid.in.",
-            "Reach us on our helpline: +91-1800-111-222 (24/7).",
-            "Our help desk is available at all major railway stations for in-person support."
-        ])
-    
-    elif any(word in user_input for word in complaint_words):
-        return random.choice([
-            "We’re sorry for the inconvenience. Please describe your issue and we’ll help resolve it.",
-            "You can submit feedback or complaints on the Support page or email support@railaid.in.",
-            "Please share details of your complaint so our support team can investigate."
-        ])
-    
-    # PNR / ID Queries
-    elif any(word in user_input for word in id_words):
-        return random.choice([
-            "Please provide your PNR or Booking ID to check your booking details.",
-            "PNR lookup feature is coming soon in RailAid! Stay tuned.",
-            "You can view booking status using your ticket number or registered email."
-        ])
-    
-    # ROUTE / STATION INFO
-    elif any(word in user_input for word in route_words):
-        return random.choice([
-            "You can check routes and stations on the Indian Railways website.",
-            "Please provide your source and destination stations for accurate route details.",
-            "Route tracking is available under the Services section."
-        ])
-
-    # DEFAULT FALLBACK
-    else:
-        return random.choice([
-            "I'm sorry, I didn’t understand that. Could you rephrase or give more details?",
-            "Can you clarify your question? I’ll do my best to help.",
-            "Hmm... I’m not sure about that. Try asking about booking, refund, or delay."
-        ])
+    intent = classify_intent(user_input)
+    return random.choice(RESPONSES.get(intent, RESPONSES["fallback"]))

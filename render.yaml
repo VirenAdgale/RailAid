@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: railaid-backend
+    runtime: node
+    plan: free
+    rootDir: Backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
+      - key: ML_SERVICE_URL
+        sync: false
+
+  - type: web
+    name: railaid-ml
+    runtime: python
+    plan: free
+    rootDir: ML
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn predict_api:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
+
+  - type: web
+    name: railaid-chatbot
+    runtime: python
+    plan: free
+    rootDir: ML
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn chatbot_api:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
